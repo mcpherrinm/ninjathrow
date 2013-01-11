@@ -1,4 +1,4 @@
-ninjastar
+Ninja Throw
 =========
 
-Ninja Star game
+Ninja Star throwing game with your phone
