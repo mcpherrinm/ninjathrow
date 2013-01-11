@@ -16,14 +16,21 @@
             <li> min Z acceleration: <span id="minZ"></span></li>
 
             <li> max magnitude: <span id="maxmag"></span></li>
+
+            <li> alpha orientation: <span id="alpha"></span></li>
+            <li> beta orientation: <span id="beta"></span></li>
+            <li> gamma orientation: <span id="gamma"></span></li>
+            <li> sum of beta orientation: <span id="sumbeta"></span></li>
         </ul>
 
         <input type="button" onclick="reset()" value="RESET">
 
         <script type="text/javascript">
   function reset() {
-   max_x = max_y = max_z = min_x = min_y = min_z = max_mag = 0;
+   max_x = max_y = max_z = min_x = min_y = min_z = max_mag = alpha = beta = gamma = sumbeta =  0;
   }
+    
+
 
             var x = 0;
             var y = 0;
@@ -39,6 +46,34 @@
             var min_x = 0;
             var min_y = 0;
             var min_z = 0;
+
+            var gamma = 0;
+            var beta = 0;
+            var alpha = 0;
+
+            var oldbeta = 0;
+            var dbeta = 0;
+
+            var sumbeta = 0;
+
+function devOrientHandler(e) {
+    alpha = e.alpha;
+    gamma = e.gamma;
+    beta = e.beta;
+
+    // note to self: beta orientation measures rotation in the axis we want for NINJA
+
+                    sumbeta = sumbeta + Math.abs(oldbeta - beta);
+                    oldbeta = beta;
+
+                    document.getElementById("alpha").innerHTML = alpha;
+                    document.getElementById("beta").innerHTML = beta; 
+                    document.getElementById("gamma").innerHTML = gamma;
+                    document.getElementById("sumbeta").innerHTML = sumbeta;
+    console.log(e);
+}
+
+            window.addEventListener('deviceorientation', devOrientHandler, false);
         
             if (window.DeviceMotionEvent != undefined) {
                 window.ondevicemotion = function (e) {
@@ -86,6 +121,7 @@
 
                     document.getElementById("mag").innerHTML = mag;
                     document.getElementById("maxmag").innerHTML = max_mag;
+
                 }
             }
         </script>
