@@ -1,0 +1,93 @@
+<html>
+    <body>
+        <ul>
+            <li> X acceleration: <span id="X"></span></li>
+            <li> Y acceleration: <span id="Y"></span></li>
+            <li> Z acceleration: <span id="Z"></span></li>
+
+            <li> magnitude: <span id="mag"></span></li>
+
+            <li> max X acceleration: <span id="maxX"></span></li>
+            <li> max Y acceleration: <span id="maxY"></span></li>
+            <li> max Z acceleration: <span id="maxZ"></span></li>
+
+            <li> min X acceleration: <span id="minX"></span></li>
+            <li> min Y acceleration: <span id="minY"></span></li>
+            <li> min Z acceleration: <span id="minZ"></span></li>
+
+            <li> max magnitude: <span id="maxmag"></span></li>
+        </ul>
+
+        <input type="button" onclick="reset()" value="RESET">
+
+        <script type="text/javascript">
+  function reset() {
+   max_x = max_y = max_z = min_x = min_y = min_z = max_mag = 0;
+  }
+
+            var x = 0;
+            var y = 0;
+            var z = 0;
+
+            var mag = 0;
+            var max_mag = 0;
+
+            var max_x = 0;
+            var max_y = 0;
+            var max_z = 0;
+
+            var min_x = 0;
+            var min_y = 0;
+            var min_z = 0;
+        
+            if (window.DeviceMotionEvent != undefined) {
+                window.ondevicemotion = function (e) {
+                    x = event.accelerationIncludingGravity.x;
+                    y = event.accelerationIncludingGravity.y;
+                    z = event.accelerationIncludingGravity.z;
+
+                    mag = Math.sqrt(x*x + y*y + z*z); 
+
+                    if (x > max_x) {
+                        max_x = x;
+                    }
+                    if (y > max_y) {
+                        max_y = y;
+                    }
+                    if (z > max_z) {
+                        max_z = z;
+                    }
+
+                    if (x < min_x) {
+                        min_x = x;
+                    }
+                    if (y < min_y) {
+                        min_y = y;
+                    }
+                    if (z < min_z) {
+                        min_z = z;
+                    }
+                    if (mag > max_mag) {
+                        max_mag = mag;
+                    }
+
+        
+                    document.getElementById("X").innerHTML = x;
+                    document.getElementById("Y").innerHTML = y;
+                    document.getElementById("Z").innerHTML = z;
+
+                    document.getElementById("maxX").innerHTML = max_x;
+                    document.getElementById("maxY").innerHTML = max_y;
+                    document.getElementById("maxZ").innerHTML = max_z;
+
+                    document.getElementById("minX").innerHTML = min_x;
+                    document.getElementById("minY").innerHTML = min_y;
+                    document.getElementById("minZ").innerHTML = min_z;
+
+                    document.getElementById("mag").innerHTML = mag;
+                    document.getElementById("maxmag").innerHTML = max_mag;
+                }
+            }
+        </script>
+    </body>
+</html>
