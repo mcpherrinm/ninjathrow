@@ -1,0 +1,4 @@
+ninjastar
+=========
+
+Ninja Star game
