@@ -57,14 +57,18 @@
             var sumbeta = 0;
 
 function devOrientHandler(e) {
-    alpha = e.alpha;
-    gamma = e.gamma;
-    beta = e.beta;
+        alpha = e.alpha;
+        gamma = e.gamma;
+        beta = e.beta;
 
     // note to self: beta orientation measures rotation in the axis we want for NINJA
 
-                    sumbeta = sumbeta + Math.abs(oldbeta - beta);
-                    oldbeta = beta;
+
+                    dbeta =  Math.abs(Number(oldbeta.toFixed()) - Number(beta.toFixed()));
+                    if (dbeta > 10) {
+                        sumbeta = sumbeta + dbeta;
+                        oldbeta = beta;
+                    }
 
                     document.getElementById("alpha").innerHTML = alpha;
                     document.getElementById("beta").innerHTML = beta; 
