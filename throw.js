@@ -7,7 +7,7 @@
 
   var airtime = 0;
 
-  var launch_threshold = 30;
+  var launch_threshold = 24;
   var airborne_threshold = 10;
   var landing_threshold = 9;
 
