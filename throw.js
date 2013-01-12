@@ -7,9 +7,9 @@
 
   var airtime = 0;
 
-  var launch_threshold = 25;
+  var launch_threshold = 30;
   var airborne_threshold = 10;
-  var landing_threshold = 8;
+  var landing_threshold = 12;
 
   var oldmags = new Array();
   var max_mag = 0;
