@@ -20,7 +20,6 @@
 <!-- display pages: -->
 <div id="screens">
   <div class="active" id="loading">Loading...</div>
-  <div id="login"><input type=button onclick="FB.login(function(response) { }, {scope:'email'});" value="LOGIN"></div>
   <div id="ready">
     <div class="container">
       <h1 class='title'>ARE YOU A NINJA?</h1>
@@ -56,6 +55,7 @@
 
     </div>
   </div>
+  <div id="login"><input type=button onclick="FB.login(function(response) { }, {scope:'email'});" value="LOGIN"></div>
 </div>
 
 <script src="throw.js"></script>
@@ -97,8 +97,7 @@ window.fbAsyncInit = function() {
   });
 
 
-  console.log("making login active");
-  makeActive("login");
+  //makeActive("login");
   FB.Event.subscribe('auth.statusChange', handleStatusChange);
 
 };
@@ -141,6 +140,10 @@ function publishStory() {
   });
   return false;
 }
+
+
+// Document ready by now.
+makeActive("ready");
 </script>
 </body>
 </html>
