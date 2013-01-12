@@ -80,14 +80,10 @@
 //                     failure_fn(score);
 //                 } else {
                      var score =  new Object();
-                     score["total"] = 0;
-                     score["total"] += (sumbeta / 360) * 100; // 100 points per rotation
-                     score["total"] += 100*airtime; // 100 points per tick of airtime
-                     score["total"] = score["total"].toFixed(0);
+                     score.rotations = Math.floor((sumbeta / 360) * 100);
+                     score.airtime   = Math.floor(100*airtime);
 
-                     score["rotations"] = sumbeta / 360;
-                     score["rotations"] = score["rotations"].toFixed(1);
-                     score["airtime"] = airtime;
+                     score.total = score.rotations + score.airtime;
 
                      clearTimeout(timeout_handle);
                      success_fn(score);
