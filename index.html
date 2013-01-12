@@ -7,6 +7,19 @@
 <style>
   div#screens > div { display: none; }
   div#screens > div.active { display: block;}
+  div#go { background-image:url("thumbprint.gif");
+           background-color: #FFF;
+           background-repeat: no-repeat;
+           background-position: center center;
+           width: 100%;
+           margin: 0; padding 0;
+        }
+  div#go .bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+  }
 </style>
 <link rel='stylesheet' href='bootstrap.min.css' type='text/css'>
 <link rel='stylesheet' href='style.css' type='text/css'>
@@ -32,9 +45,12 @@
   <div id="go">
     <div class="container">
       <h1 class='title'>PROVE IT</h1>
-      <img src="thumbprint.gif" alt="" id="thumb-img" onmousedown="throw_phone()"/>
-      <h1 class='title'>THROW IT</h1>
     </div>
+      <h1 class='title bottom'>THROW IT</h1>
+  </div>
+  <div id="flying">
+    <h1> IN FLIGHT </h1>
+    <img src="ninjastar.jpg" />
   </div>
   <div id="nope">
     <div class="container">
@@ -136,6 +152,15 @@ window.fbAsyncInit = function() {
 function imaninja() {
   // invoke throw.doit
   makeActive("go");
+  document.getElementById("go").style.height = window.innerHeight + "px";
+  document.getElementById('go').onmousedown = function() {
+    document.getElementById("go").style.backgroundColor = "#FF0000";
+  }
+  document.getElementById('go').onmouseup = function() {
+    document.getElementById("go").style.backgroundColor = "#FFF";
+    ninjathrow.doit(success_throw, failure_throw);
+    makeActive("flying");
+  }
 }
 
 // hobo:
@@ -185,9 +210,6 @@ function publishStory() {
 }
 
 function throw_phone() {
-  document.getElementById('thumb-img').onmouseup = function() {
-    ninjathrow.doit(success_throw, failure_throw);
-  }
 }
 
 
