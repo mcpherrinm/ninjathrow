@@ -74,5 +74,8 @@ div#screens > div {
 
 #loading, #ready, #go, #nope, #success {
   -webkit-backface-visibility: hidden;
+  top: 0;
+  left: 0;
+  width: 100%;
 }
 
