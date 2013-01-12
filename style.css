@@ -50,3 +50,8 @@ td:last-child {
 .post-btn {
   margin-bottom: 6px;
 }
+
+#thumb-img {
+  height: 200px;
+  background-image:'thumbprint.gif';
+}
