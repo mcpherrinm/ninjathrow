@@ -5,6 +5,8 @@
   var success_fn = function(score) {console.log("UNINITIALIZED");}
   var failure_fn = function(score) {console.log("UNINITIALIZED");}
 
+  var airtime = 0;
+
   var launch_threshold = 29;
   var airborne_threshold = 10;
   var landing_threshold = 12;
@@ -82,10 +84,9 @@
                  variance = variance / min_samples;
 
                  if (variance < airborne_threshold) {
-                     start_time = new Date().getTime();
-
                      state = "AIRBORNE";
                      sumbeta = 0;
+                     airtime += 1;
 
                      old_x = x;
                      old_y = y;
@@ -96,6 +97,7 @@
          }
 
          if (state == "AIRBORNE") {
+             airtime += 1;
              var diff = Math.sqrt((x-old_x)*(x-old_x) + (y-old_y)*(y-old_y) + (x-old_z)*(z-old_z));
 
              old_x = x;
@@ -103,7 +105,6 @@
              old_z = z;
 
              if (diff > landing_threshold) {
-                 end_time = new Date().getTime();
                  state = "DONE";
 
 //                 if (airtime <= 2) {
@@ -117,13 +118,12 @@
 //
 //                     failure_fn(score);
 //                 } else {
-                     var airtime = (end_time - start_time).getMilliseconds() + (end_time - start_time).getSeconds()*1000;
                      var score =  new Object();
                      score["total"] = 0;
-                     score["total"] += Number((sumbeta / 360).toFixed()) * 100; // 100 points per rotation
-                     score["total"] += airtime; // 1 point per millisecond air time;
+                     score["total"] += (sumbeta / 360) * 100; // 100 points per rotation
+                     score["total"] += 100*airtime; // 100 points per tick of airtime
 
-                     score["rotations"] = Number((sumbeta / 360).toFixed());
+                     score["rotations"] = sumbeta / 360;
                      score["airtime"] = airtime;
 
                      success_fn(score);
