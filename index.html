@@ -74,7 +74,6 @@
 
     </div>
   </div>
-  <div id="login"><input type=button onclick="FB.login(function(response) { }, {scope:'email'});" value="LOGIN"></div>
 </div>
 
 <script src="throw.js"></script>
@@ -144,6 +143,19 @@ function failure_throw(score) {
   makeActive("nope");
 }
 
+
+function loginAndPost() {
+FB.getLoginStatus(function(response) {
+  if (response.status === 'connected') {
+    publishStory();
+  } else if (response.status === 'not_authorized') {
+    makeActive("ready");
+    document.write("You didn't authorize the app");
+  } else {
+    FB.login(function(response) { publishStory(); }, {scope:'email'});
+  }
+ });
+}
 
 function publishStory() {
   FB.ui({
