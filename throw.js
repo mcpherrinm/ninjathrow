@@ -34,7 +34,7 @@
 
       // START YOUR CALL BACKS HERE
       // window.addEventListener('devicemotion'...
-      window.setTimeout(function() {success_fn(9000)}, 2500);
+      window.setTimeout(function() {failure(9000)}, 2500);
 
       return true;
     }
