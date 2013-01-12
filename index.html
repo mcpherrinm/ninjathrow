@@ -32,7 +32,7 @@
   <div id="go">
     <div class="container">
       <h1 class='title'>PROVE IT</h1>
-      <img src="ninja.jpg" alt="" class="ninja-img" />
+      <img src="thumbprint.gif" alt="" id="thumb-img" onmousedown="throw_phone()"/>
       <h1 class='title'>THROW IT</h1>
     </div>
   </div>
@@ -134,7 +134,6 @@ window.fbAsyncInit = function() {
 
 function imaninja() {
   // invoke throw.doit
-  ninjathrow.doit(success_throw, failure_throw);
   makeActive("go");
 }
 
@@ -182,6 +181,12 @@ function publishStory() {
     console.log('publishStory response: ', response);
   });
   return false;
+}
+
+function throw_phone() {
+  document.getElementById('thumb-img').onmouseup = function() {
+    ninjathrow.doit(success_throw, failure_throw);
+  }
 }
 
 
