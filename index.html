@@ -53,15 +53,15 @@
     <table class="table table-bordered">
       <tr>
         <td>ROTATIONS</td>
-        <td>7</td>
+        <td id="rotations"></td>
       </tr>
       <tr>
         <td>AIRTIME</td>
-        <td>5s</td>
+        <td id="airtime"></td>
       </tr>
       <tr>
         <td>JERK</td>
-        <td>1000</td>
+        <td id="jerk">you</td>
       </tr>
       <tr>
         <td>TOTAL SCORE</td>
@@ -139,7 +139,12 @@ function imaninja() {
 var score = 0;
 function success_throw(the_score) {
   makeActive("success");
-  document.getElementById("total_score").textContent = "" + the_score;
+  document.getElementById("rotations").textContent =
+    "" + the_score.rotations;
+  document.getElementById("airtime").textContent =
+    "" + the_score.airtime;
+  document.getElementById("total_score").textContent =
+    "" + the_score.total;
   score = the_score;
 }
 
@@ -166,7 +171,7 @@ function publishStory() {
     method: 'feed',
     name: 'I\'m a ninja!',
     caption: 'Ninja Test',
-    description: 'I scored '+ score + ' in Ninja Throw!  True ninja material here!',
+    description: 'I scored '+ score.total + ' in Ninja Throw!  True ninja material here!',
     link: 'http://mcpherrin.ca/ninjathrow/',
     picture: 'http://mcpherrin.ca/ninjathrow/ninjastar.png'
   }, 
