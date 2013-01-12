@@ -1,4 +1,7 @@
+<!doctype html>
 <html>
+    <head>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <body>
         <ul>
             <li> X acceleration: <span id="X"></span></li>
@@ -24,13 +27,17 @@
         </ul>
 
         <input type="button" onclick="reset()" value="RESET">
+        <input type="button" onclick="makegraph()" value="MAKE GRAPH">
+
+        <div style="height:250px" id="chart_div" />
+
 
         <script type="text/javascript">
-  function reset() {
-   max_x = max_y = max_z = min_x = min_y = min_z = max_mag = alpha = beta = gamma = sumbeta =  0;
-  }
-    
-
+            "use strict;"
+            // load google graph library
+            google.load("visualization", "1", {packages:["corechart"]});
+            google.setOnLoadCallback(initgraph);
+            var chart = 0;
 
             var x = 0;
             var y = 0;
@@ -56,14 +63,38 @@
 
             var sumbeta = 0;
 
-function devOrientHandler(e) {
-        alpha = e.alpha;
-        gamma = e.gamma;
-        beta = e.beta;
+            var tick = 1;
 
-    // note to self: beta orientation measures rotation in the axis we want for NINJA
+            var data = new Array();
+            data[0] = ['tick', 'force (N)'];
+//            data[1] = [0, 0];
 
+            function reset() {
+                max_x = max_y = max_z = min_x = min_y = min_z = max_mag = alpha = beta = gamma = sumbeta = oldbeta =   0;
+                tick = 1;
+                data = new Array();
+                data[0] = ['tick', 'force (N)'];
+            }
 
+            function initgraph() {
+                chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            }
+
+            function makegraph() {
+                var options = {
+                    title: 'stuff'
+                };
+                chart.draw(google.visualization.arrayToDataTable(data), options);
+            }
+
+            function devOrientHandler(e) {
+                    alpha = e.alpha;
+                    gamma = e.gamma;
+                    beta = e.beta;
+            
+                // note to self: beta orientation measures rotation in the axis we want for NINJA
+            
+            
                     dbeta =  Math.abs(Number(oldbeta.toFixed()) - Number(beta.toFixed()));
                     if (dbeta > 10) {
                         sumbeta = sumbeta + dbeta;
@@ -74,8 +105,8 @@ function devOrientHandler(e) {
                     document.getElementById("beta").innerHTML = beta; 
                     document.getElementById("gamma").innerHTML = gamma;
                     document.getElementById("sumbeta").innerHTML = sumbeta;
-    console.log(e);
-}
+                console.log(e);
+            }
 
             window.addEventListener('deviceorientation', devOrientHandler, false);
         
@@ -111,6 +142,9 @@ function devOrientHandler(e) {
                     }
 
         
+                    data.push([tick, mag]);
+                    tick = tick + 1;
+
                     document.getElementById("X").innerHTML = x;
                     document.getElementById("Y").innerHTML = y;
                     document.getElementById("Z").innerHTML = z;
@@ -125,6 +159,7 @@ function devOrientHandler(e) {
 
                     document.getElementById("mag").innerHTML = mag;
                     document.getElementById("maxmag").innerHTML = max_mag;
+
 
                 }
             }
