@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
- <title>Title</title>
+ <title>Ninja Throw!</title>
 <meta name="viewport" content="initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
 
 <style>
@@ -34,10 +34,23 @@
 
 <script>
 "use strict";
+function handleStatusChange(response) {
+  document.body.className = response.authResponse ? 'connected' : 'not_connected';
+  if (response.authResponse) {
+    console.log(response);
+    updateUserInfo(response);
+  }
+}
+function updateUserInfo(response) {
+  FB.api('/me', function(response) {
+    document.getElementById('user-info').innerHTML = '<img src="https://graph.facebook.com/' + response.id + '/picture">' + response.name;
+  });
+}
+
 window.fbAsyncInit = function() {
   FB.init({
     appId      : '571809482834267', // App ID
-    channelUrl : '//WWW.mcpherrin.ca/channel.html', // Channel File
+    channelUrl : '//mcpherrin.ca/ninjathrow/channel.html', // Channel File
     status     : true, // check login status
     cookie     : true, // enable cookies to allow the server to access the session
     xfbml      : true  // parse XFBML
@@ -55,18 +68,6 @@ window.fbAsyncInit = function() {
    ref.parentNode.insertBefore(js, ref);
  }(document));
 
-function handleStatusChange(response) {
-  document.body.className = response.authResponse ? 'connected' : 'not_connected';
-  if (response.authResponse) {
-    console.log(response);
-    updateUserInfo(response);
-  }
-}
-function updateUserInfo(response) {
-  FB.api('/me', function(response) {
-    document.getElementById('user-info').innerHTML = '<img src="https://graph.facebook.com/' + response.id + '/picture">' + response.name;
-  });
-}
 function publishStory() {
   FB.ui({
     method: 'feed',
