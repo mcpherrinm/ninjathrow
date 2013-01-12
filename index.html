@@ -30,6 +30,15 @@
            margin: 0; padding 0;
         }
   div#flying {
+           background-color: #FFF;
+           background-repeat: no-repeat;
+           background-position: center center;
+           background-size: 50%;
+           width: 100%;
+           margin: 0; padding 0;
+           overflow: hidden;
+  }
+  div#shuriken {
            background-image:url("ninjastar.jpg");
            background-color: #FFF;
            background-repeat: no-repeat;
@@ -74,6 +83,8 @@
       <h1 class='title bottom'>THROW IT</h1>
   </div>
   <div id="flying">
+      <div id="shuriken">
+      </div>
   </div>
   <div id="nope">
     <div class="container">
@@ -186,7 +197,7 @@ function imaninja() {
     ninjathrow.doit(success_throw, failure_throw);
     makeActive("flying");
 
-    var shuriken = document.getElementById("flying");
+    var shuriken = document.getElementById("shuriken");
     var degrees = 0;
 
     setInterval(function() {
