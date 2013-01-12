@@ -9,7 +9,7 @@
 
   var launch_threshold = 29;
   var airborne_threshold = 10;
-  var landing_threshold = 20;
+  var landing_threshold = 16;
 
   var oldmags = new Array();
   var max_mag = 0;
