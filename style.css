@@ -72,7 +72,7 @@ div#screens > div {
   -moz-transition: all 0.4s ease-in-out;
 }
 
-#ready, #go, #nope, #success {
+#loading, #ready, #go, #nope, #success {
   -webkit-backface-visibility: hidden;
   width: 100%;
 }
