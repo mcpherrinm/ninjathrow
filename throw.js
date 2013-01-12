@@ -80,6 +80,13 @@
 //                     failure_fn(score);
 //                 } else {
                      var score =  new Object();
+
+                     // unset movement and orientation handlers
+                      window.ondevicemotion = null;
+                      window.ondeviceorientation = null;
+
+
+
                      score.rotations = Math.floor((sumbeta / 360) * 100);
                      score.airtime   = Math.floor(100*airtime);
 
