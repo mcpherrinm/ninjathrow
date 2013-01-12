@@ -9,7 +9,7 @@
 
   var launch_threshold = 29;
   var airborne_threshold = 10;
-  var landing_threshold = 12;
+  var landing_threshold = 19;
 
   var oldmags = new Array();
   var max_mag = 0;
@@ -49,16 +49,25 @@
 
   // FILL IN YOUR CALL BACK HANDLER CODE HERE
   function handleSomethingOrOther(event) {
-
          var x = event.accelerationIncludingGravity.x;
          var y = event.accelerationIncludingGravity.y;
          var z = event.accelerationIncludingGravity.z;
 
          var mag = Math.sqrt(x*x + y*y + z*z); 
 
+         // this is our first tick; init values for old accelerations
+      if (old_x === null && old_y === null && old_z == null) {
+          old_x = x;
+          old_y = y;
+          old_z = z;
+      }
+
+      if (state != "DONE") {
+
+
          tick = tick + 1;
              airtime += 1;
-             var diff = Math.sqrt((x-old_x)*(x-old_x) + (y-old_y)*(y-old_y) + (x-old_z)*(z-old_z));
+             var diff = Math.sqrt((x-old_x)*(x-old_x) + (y-old_y)*(y-old_y) + (z-old_z)*(z-old_z));
 
              old_x = x;
              old_y = y;
@@ -66,26 +75,7 @@
 
              if (diff > landing_threshold) {
                  state = "DONE";
-                     // document.body.style.background = "green";
-
-//                 if (airtime <= 2) {
-//                     var score =  new Object();
-//                     score["total"] = 0;
-//                     score["total"] += (sumbeta / 360) * 100; // 100 points per rotation
-//                     score["total"] += 100*airtime; // 100 points per tick of airtime
-//
-//                     score["rotations"] = sumbeta / 360;
-//                     score["airtime"] = airtime;
-//
-//                     failure_fn(score);
-//                 } else {
                      var score =  new Object();
-
-                     // unset movement and orientation handlers
-                      window.ondevicemotion = null;
-                      window.ondeviceorientation = null;
-
-
 
                      score.rotations = Math.floor((sumbeta / 360) * 100);
                      score.airtime   = Math.floor(100*airtime);
@@ -94,17 +84,9 @@
 
                      clearTimeout(timeout_handle);
                      success_fn(score);
-//                 }
              }
+  }
 
-  // handle this event and store the data or something
-  // if stuff is doen:
-    // decide if you're good enough:
-      // if(goodenough) {
-      //   success_fn(some sort of score);
-      // } else {
-      //    failure_fn(some sort of score);
-      // }
   };
 
 
@@ -127,10 +109,10 @@
       oldmags = new Array();
       max_mag = 0;
     
-      timeout_handle = window.setTimeout(failure, 5000);
-      old_x = 0;
-      old_y = 0;
-      old_z = 0;
+      timeout_handle = window.setTimeout(function() {state = "DONE"; failure();}, 5000);
+      old_x = null;
+      old_y = null;
+      old_z = null;
     
       tick = 0;
       state = "READY";
@@ -139,8 +121,6 @@
       oldbeta = null;
       dbeta = 0;
       
-                     document.body.style.background = "white";
-
       // START YOUR CALL BACKS HERE
       // window.addEventListener('devicemotion'...
       window.ondevicemotion = handleSomethingOrOther;

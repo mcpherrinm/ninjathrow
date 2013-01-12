@@ -195,6 +195,8 @@ function imaninja() {
     document.getElementById("go").style.backgroundSize = "60%";
   }
   document.getElementById('go').ontouchend = function() {
+      // reset size of shuriken image for subsequent attempts
+    document.getElementById("go").style.backgroundSize = "50%";
     document.getElementById("go").style.backgroundColor = "#FFF";
     ninjathrow.doit(success_throw, failure_throw);
     makeActive("flying");
