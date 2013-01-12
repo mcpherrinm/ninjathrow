@@ -7,9 +7,9 @@
 
   var airtime = 0;
 
-  var launch_threshold = 25;
+  var launch_threshold = 27;
   var airborne_threshold = 10;
-  var landing_threshold = 8;
+  var landing_threshold = 9;
 
   var oldmags = new Array();
   var max_mag = 0;
@@ -82,7 +82,12 @@
 
              if (diff > landing_threshold) {
                  state = "DONE";
-                 success_fn(900);
+
+                 if (airtime <= 3) {
+                     failure_fn(0);
+                 } else {
+                     success_fn(900);
+                 }
              }
          }
 
