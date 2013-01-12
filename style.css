@@ -25,3 +25,24 @@
   text-decoration: none;
   color: white;
 }
+
+.green-circle {
+  background:#46a546;
+  color: white;
+  border-radius: 30px;
+  width: 60px;
+  font-size: 40px;
+  display: inline-block;
+}
+
+tr:last-child {
+  font-weight: bold;
+}
+
+td:last-child {
+  text-align: right;
+}
+
+.container {
+  margin-bottom: 10px;
+}
