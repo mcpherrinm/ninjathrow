@@ -7,7 +7,7 @@
 
   var airtime = 0;
 
-  var launch_threshold = 30;
+  var launch_threshold = 29;
   var airborne_threshold = 10;
   var landing_threshold = 12;
 
@@ -92,6 +92,7 @@
          }
 
          if (state == "AIRBORNE") {
+             sumbeta = 0;
              airtime += 1;
              var diff = Math.sqrt((x-old_x)*(x-old_x) + (y-old_y)*(y-old_y) + (x-old_z)*(z-old_z));
 
@@ -103,11 +104,24 @@
                  state = "DONE";
 
                  if (airtime <= 2) {
-                     failure_fn(0);
+                     var score =  new Object();
+                     score["total"] = 0;
+                     score["total"] += (sumbeta / 360) * 100; // 100 points per rotation
+                     score["total"] += 100*airtime; // 100 points per tick of airtime
+
+                     score["rotations"] = sumbeta / 360;
+                     score["airtime"] = airtime;
+
+                     failure_fn(score);
                  } else {
-                     var score = 0;
-                     score += (sumbeta / 360) * 100; // 100 points per rotation
-                     score += 100*airtime; // 100 points per tick of airtime
+                     var score =  new Object();
+                     score["total"] = 0;
+                     score["total"] += (sumbeta / 360) * 100; // 100 points per rotation
+                     score["total"] += 100*airtime; // 100 points per tick of airtime
+
+                     score["rotations"] = sumbeta / 360;
+                     score["airtime"] = airtime;
+
                      success_fn(score);
                  }
              }
