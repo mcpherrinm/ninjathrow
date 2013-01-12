@@ -1,0 +1,250 @@
+<!doctype html>
+<html>
+    <head>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    </head>
+    <body>
+        <ul>
+            <li> X acceleration: <span id="X"></span></li>
+            <li> Y acceleration: <span id="Y"></span></li>
+            <li> Z acceleration: <span id="Z"></span></li>
+
+            <li> magnitude: <span id="mag"></span></li>
+
+            <li> max X acceleration: <span id="maxX"></span></li>
+            <li> max Y acceleration: <span id="maxY"></span></li>
+            <li> max Z acceleration: <span id="maxZ"></span></li>
+
+            <li> min X acceleration: <span id="minX"></span></li>
+            <li> min Y acceleration: <span id="minY"></span></li>
+            <li> min Z acceleration: <span id="minZ"></span></li>
+
+            <li> max magnitude: <span id="maxmag"></span></li>
+
+            <li> alpha orientation: <span id="alpha"></span></li>
+            <li> beta orientation: <span id="beta"></span></li>
+            <li> gamma orientation: <span id="gamma"></span></li>
+            <li> sum of beta orientation: <span id="sumbeta"></span></li>
+
+            <li> airtime: <span id="airtime"></span></li>
+        </ul>
+
+        <h1 id="status">READY</h1>
+
+        <input type="button" onclick="reset()" value="RESET">
+        <input type="button" onclick="makegraph()" value="MAKE GRAPH">
+
+        <div style="height:250px" id="chart_div" />
+
+        <script type="text/javascript">
+            "use strict;"
+            // load google graph library
+            google.load("visualization", "1", {packages:["corechart"]});
+            google.setOnLoadCallback(initgraph);
+            var chart = 0;
+
+            var x = 0;
+            var y = 0;
+            var z = 0;
+
+            var airtime = 0;
+
+            var launch_threshold = 25;
+            var airborne_threshold = 10;
+            var landing_threshold = 8;
+
+            var oldmags = new Array();
+            var mag = 0;
+            var max_mag = 0;
+            var min_samples = 3;
+
+            var max_x = 0;
+            var max_y = 0;
+            var max_z = 0;
+
+            var min_x = 0;
+            var min_y = 0;
+            var min_z = 0;
+
+            var old_x = 0;
+            var old_y = 0;
+            var old_z = 0;
+
+            var gamma = 0;
+            var beta = 0;
+            var alpha = 0;
+
+            var oldbeta = 0;
+            var dbeta = 0;
+
+            var sumbeta = 0;
+
+            var tick = 0;
+            var state = "READY";
+
+            var data = new Array();
+            data[0] = ['tick', 'force (N)'];
+
+            var variances = new Array();
+            variances[0] = ['tick', 'variance'];
+
+            function initgraph() {
+                chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            }
+
+            function makegraph() {
+                var options = {
+                    title: 'stuff'
+                };
+                chart.draw(google.visualization.arrayToDataTable(variances), options);
+            }
+
+            function reset() {
+                max_x = max_y = max_z = min_x = min_y = min_z = max_mag = alpha = beta = gamma = sumbeta = oldbeta = airtime =  0;
+                tick = 0;
+                data = new Array();
+                variances = new Array();
+                data[0] = ['tick', 'force (N)'];
+                variances[0] = ['tick', 'variance'];
+                state = "READY";
+                document.getElementById("status").innerHTML = "READY";
+                document.getElementById("airtime").innerHTML = "???";
+            }
+
+            function devOrientHandler(e) {
+                    alpha = e.alpha;
+                    gamma = e.gamma;
+                    beta = e.beta;
+            
+                // note to self: beta orientation measures rotation in the axis we want for NINJA
+            
+            
+                    dbeta =  Math.abs(Number(oldbeta.toFixed()) - Number(beta.toFixed()));
+                    if (dbeta > 10) {
+                        sumbeta = sumbeta + dbeta;
+                        oldbeta = beta;
+                    }
+
+                    document.getElementById("alpha").innerHTML = alpha;
+                    document.getElementById("beta").innerHTML = beta; 
+                    document.getElementById("gamma").innerHTML = gamma;
+                    document.getElementById("sumbeta").innerHTML = sumbeta;
+            }
+
+            window.addEventListener('deviceorientation', devOrientHandler, false);
+        
+            if (window.DeviceMotionEvent != undefined) {
+                window.ondevicemotion = function (e) {
+                    x = event.accelerationIncludingGravity.x;
+                    y = event.accelerationIncludingGravity.y;
+                    z = event.accelerationIncludingGravity.z;
+
+                    mag = Math.sqrt(x*x + y*y + z*z); 
+
+                    if (x > max_x) {
+                        max_x = x;
+                    }
+                    if (y > max_y) {
+                        max_y = y;
+                    }
+                    if (z > max_z) {
+                        max_z = z;
+                    }
+
+                    if (x < min_x) {
+                        min_x = x;
+                    }
+                    if (y < min_y) {
+                        min_y = y;
+                    }
+                    if (z < min_z) {
+                        min_z = z;
+                    }
+                    if (mag > max_mag) {
+                        max_mag = mag;
+                    }
+
+                    data.push([tick, mag]);
+                    tick = tick + 1;
+
+                    if (mag > launch_threshold && state == "READY") {
+                        document.getElementById("status").innerHTML = "THROWING";
+                        state = "THROWING";
+                        oldmags[0] = mag;
+
+                    }
+
+                    if (state == "THROWING" || state == "AIRBORNE") {
+                        oldmags.push(mag);
+
+                        if (oldmags.length >= min_samples) {
+                            // see if the last min_samples mags are all within close variance
+
+                            // compute variance
+                            var mean = 0;
+                            var variance = 0;
+
+                            for (var i = oldmags.length - min_samples; i < oldmags.length; i++) {
+                                mean += oldmags[i];
+                            }
+
+                            mean = mean / min_samples;
+
+                            for (var i = oldmags.length - min_samples; i < oldmags.length; i++) {
+                                variance += Math.pow(oldmags[i] - mean, 2);
+                            }
+
+                            variance = variance / min_samples;
+
+                            variances.push([tick, variance]);
+
+                            if (variance < airborne_threshold) {
+                                state = "AIRBORNE";
+                                document.getElementById("status").innerHTML = "AIRBORNE";
+                                airtime += 1;
+
+                                old_x = x;
+                                old_y = y;
+                                old_z = z;
+                            }
+
+                        }
+                    }
+
+                    if (state == "AIRBORNE") {
+                        airtime += 1;
+                        var diff = Math.sqrt((x-old_x)*(x-old_x) + (y-old_y)*(y-old_y) + (x-old_z)*(z-old_z));
+
+                        old_x = x;
+                        old_y = y;
+                        old_z = z;
+
+                        if (diff > landing_threshold) {
+                            state = "DONE";
+                            document.getElementById("status").innerHTML = "DONE";
+                        }
+                        
+                        document.getElementById("airtime").innerHTML = airtime;
+                    }
+
+                    document.getElementById("X").innerHTML = x;
+                    document.getElementById("Y").innerHTML = y;
+                    document.getElementById("Z").innerHTML = z;
+
+                    document.getElementById("maxX").innerHTML = max_x;
+                    document.getElementById("maxY").innerHTML = max_y;
+                    document.getElementById("maxZ").innerHTML = max_z;
+
+                    document.getElementById("minX").innerHTML = min_x;
+                    document.getElementById("minY").innerHTML = min_y;
+                    document.getElementById("minZ").innerHTML = min_z;
+
+                    document.getElementById("mag").innerHTML = mag;
+                    document.getElementById("maxmag").innerHTML = max_mag;
+
+
+                }
+            }
+        </script>
+    </body>
+</html>
