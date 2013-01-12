@@ -2,7 +2,7 @@
 <html>
 <head>
  <title>Ninja Throw!</title>
-<meta name="viewport" content="initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="viewport" content="initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,width=device-width"/>
 
 <style>
   div#screens > div { 
@@ -10,6 +10,41 @@
   }
   div#screens > div.active {
   -webkit-transform: rotateY(0);
+  * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+
+  div#screens > div { display: none; }
+  div#screens > div.active { display: block;}
+  div#go { background-image:url("ninjastar.jpg");
+           background-color: #FFF;
+           background-repeat: no-repeat;
+           background-position: center center;
+           background-size: 50%;
+           width: 100%;
+           margin: 0; padding 0;
+        }
+  div#flying {
+           background-image:url("ninjastar.jpg");
+           background-color: #FFF;
+           background-repeat: no-repeat;
+           background-position: center center;
+           background-size: 50%;
+           width: 100%;
+           margin: 0; padding 0;
+           overflow: hidden;
+  }
+  div#go .bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
   }
 </style>
 <link rel='stylesheet' href='bootstrap.min.css' type='text/css'>
@@ -36,9 +71,10 @@
   <div id="go">
     <div class="container"> 
       <h1 class='title'>PROVE IT</h1>
-      <div id="thumb-img" onmousedown="throw_phone()"></div>
-      <h1 class='title'>THROW IT</h1>
     </div>
+      <h1 class='title bottom'>THROW IT</h1>
+  </div>
+  <div id="flying">
   </div>
   <div id="nope">
     <div class="container">
@@ -64,10 +100,6 @@
         <td id="airtime"></td>
       </tr>
       <tr>
-        <td>JERK</td>
-        <td id="jerk">you</td>
-      </tr>
-      <tr>
         <td>TOTAL SCORE</td>
         <td id="total_score">600</td>
       </tr>
@@ -87,6 +119,12 @@
 <script src="throw.js"></script>
 <script>
 "use strict";
+
+// prevent scrolling
+document.body.addEventListener('touchmove', function(event) {
+    event.preventDefault();
+}, false);
+
 
 function makeActive(id) {
   // Unset as active
@@ -140,6 +178,26 @@ window.fbAsyncInit = function() {
 function imaninja() {
   // invoke throw.doit
   makeActive("go");
+  document.getElementById("go").style.height = window.innerHeight + "px";
+  document.getElementById('go').ontouchstart = function() {
+    document.getElementById("go").style.backgroundSize = "60%";
+  }
+  document.getElementById('go').ontouchend = function() {
+    document.getElementById("go").style.backgroundColor = "#FFF";
+    ninjathrow.doit(success_throw, failure_throw);
+    makeActive("flying");
+
+    var shuriken = document.getElementById("flying");
+    var degrees = 0;
+
+    setInterval(function() {
+        degrees += 10;
+        degrees = degrees % 360;
+        shuriken.style.transform =  "rotate(" + degrees + "deg)";
+        shuriken.style.webkitTransform =  "rotate(" + degrees + "deg)";
+    }, 20);
+    document.getElementById("flying").style.height = window.innerHeight + "px";
+  }
 }
 
 // hobo:
@@ -189,9 +247,6 @@ function publishStory() {
 }
 
 function throw_phone() {
-  document.getElementById('thumb-img').onmouseup = function() {
-    ninjathrow.doit(success_throw, failure_throw);
-  }
 }
 
 
