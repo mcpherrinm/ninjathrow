@@ -157,6 +157,21 @@
       success_fn = success;
       failure_fn = failure;
 
+      airtime = 0;
+      oldmags = new Array();
+      max_mag = 0;
+    
+      old_x = 0;
+      old_y = 0;
+      old_z = 0;
+    
+      tick = 0;
+      state = "READY";
+    
+      sumbeta = 0;
+      oldbeta = null;
+      dbeta = 0;
+
       // START YOUR CALL BACKS HERE
       // window.addEventListener('devicemotion'...
       window.ondevicemotion = handleSomethingOrOther;
