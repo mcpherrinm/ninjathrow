@@ -103,17 +103,17 @@
              if (diff > landing_threshold) {
                  state = "DONE";
 
-                 if (airtime <= 2) {
-                     var score =  new Object();
-                     score["total"] = 0;
-                     score["total"] += (sumbeta / 360) * 100; // 100 points per rotation
-                     score["total"] += 100*airtime; // 100 points per tick of airtime
-
-                     score["rotations"] = sumbeta / 360;
-                     score["airtime"] = airtime;
-
-                     failure_fn(score);
-                 } else {
+//                 if (airtime <= 2) {
+//                     var score =  new Object();
+//                     score["total"] = 0;
+//                     score["total"] += (sumbeta / 360) * 100; // 100 points per rotation
+//                     score["total"] += 100*airtime; // 100 points per tick of airtime
+//
+//                     score["rotations"] = sumbeta / 360;
+//                     score["airtime"] = airtime;
+//
+//                     failure_fn(score);
+//                 } else {
                      var score =  new Object();
                      score["total"] = 0;
                      score["total"] += (sumbeta / 360) * 100; // 100 points per rotation
@@ -123,7 +123,7 @@
                      score["airtime"] = airtime;
 
                      success_fn(score);
-                 }
+//                 }
              }
          }
 
