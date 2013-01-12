@@ -64,7 +64,7 @@
 
              if (diff > landing_threshold) {
                  state = "DONE";
-                     document.body.style.background = "green";
+                     // document.body.style.background = "green";
 
 //                 if (airtime <= 2) {
 //                     var score =  new Object();
