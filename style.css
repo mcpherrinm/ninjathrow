@@ -58,3 +58,20 @@ td:last-child {
   background-repeat: no-repeat;
   background-position: center;
 }
+
+div#screens > div {
+  -webkit-transform: rotateY(180deg);
+  -webkit-backface-visibility: hidden;
+  position: absolute;
+}
+
+div#screens > div {
+  -webkit-transition: all 0.4s ease-in-out;
+  -moz-transition: all 0.4s ease-in-out;
+}
+
+#ready, #go, #nope, #success {
+  -webkit-backface-visibility: hidden;
+  width: 100%;
+}
+
