@@ -65,7 +65,7 @@
       </tr>
       <tr>
         <td>TOTAL SCORE</td>
-        <td>600</td>
+        <td id="total_score">600</td>
       </tr>
     </table>
     <div onclick="publishStory()" class="btn btn-primary">
@@ -139,6 +139,7 @@ function imaninja() {
 var score = 0;
 function success_throw(the_score) {
   makeActive("success");
+  document.getElementById("total_score").textContent = "" + the_score;
   score = the_score;
 }
 
@@ -165,7 +166,7 @@ function publishStory() {
     method: 'feed',
     name: 'I\'m a ninja!',
     caption: 'Ninja Test',
-    description: 'I scored '+ score + 'in Ninja Throw!  True ninja material here!',
+    description: 'I scored '+ score + ' in Ninja Throw!  True ninja material here!',
     link: 'http://mcpherrin.ca/ninjathrow/',
     picture: 'http://mcpherrin.ca/ninjathrow/ninjastar.png'
   }, 
