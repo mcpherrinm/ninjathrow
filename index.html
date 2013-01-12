@@ -2,7 +2,7 @@
 <html>
 <head>
  <title>Ninja Throw!</title>
-<meta name="viewport" content="initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="viewport" content="initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,width=device-width"/>
 
 <style>
   div#screens > div { display: none; }
@@ -108,6 +108,12 @@
 <script src="throw.js"></script>
 <script>
 "use strict";
+
+// prevent scrolling
+document.body.addEventListener('touchmove', function(event) {
+    event.preventDefault();
+}, false);
+
 
 function makeActive(id) {
   // Unset as active
