@@ -4,6 +4,21 @@
   var success_fn = function(score) {console.log("UNINITIALIZED");}
   var failure_fn = function(score) {console.log("UNINITIALIZED");}
 
+  // FILL IN YOUR CALL BACK HANDLER CODE HERE
+  function handleSomethingOrOther(event) {
+  // handle this event and store the data or something
+  // if stuff is doen:
+    // decide if you're good enough:
+      // if(goodenough) {
+      //   success_fn(some sort of score);
+      // } else {
+      //    failure_fn(some sort of score);
+      // }
+  };
+
+
+
+
   var ninjathrow = {
     doit: function(success, failure) {
       // stash those success / failure functions
@@ -16,6 +31,10 @@
       }
       success_fn = success;
       failure_fn = failure;
+
+      // START YOUR CALL BACKS HERE
+      // window.addEventListener('devicemotion'...
+
       return true;
     }
   };
