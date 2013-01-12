@@ -55,50 +55,6 @@
          var mag = Math.sqrt(x*x + y*y + z*z); 
 
          tick = tick + 1;
-
-         if (mag > launch_threshold && state == "READY") {
-             state = "THROWING";
-             oldmags[0] = mag;
-             document.body.style.background = "red";
-         }
-
-         if (state == "THROWING") {
-             oldmags.push(mag);
-
-             if (oldmags.length >= min_samples) {
-                 // see if the last min_samples mags are all within close variance
-
-                 // compute variance
-                 var mean = 0;
-                 var variance = 0;
-
-                 for (var i = oldmags.length - min_samples; i < oldmags.length; i++) {
-                     mean += oldmags[i];
-                 }
-
-                 mean = mean / min_samples;
-
-                 for (var i = oldmags.length - min_samples; i < oldmags.length; i++) {
-                     variance += Math.pow(oldmags[i] - mean, 2);
-                 }
-
-                 variance = variance / min_samples;
-
-                 if (variance < airborne_threshold) {
-                     state = "AIRBORNE";
-                     document.body.style.background = "blue";
-                     sumbeta = 0;
-                     airtime += 1;
-
-                     old_x = x;
-                     old_y = y;
-                     old_z = z;
-                 }
-
-             }
-         }
-
-         if (state == "AIRBORNE") {
              airtime += 1;
              var diff = Math.sqrt((x-old_x)*(x-old_x) + (y-old_y)*(y-old_y) + (x-old_z)*(z-old_z));
 
@@ -134,7 +90,6 @@
                      success_fn(score);
 //                 }
              }
-         }
 
   // handle this event and store the data or something
   // if stuff is doen:
