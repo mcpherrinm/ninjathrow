@@ -61,7 +61,9 @@ td:last-child {
 
 div#screens > div {
   -webkit-transform: rotateY(180deg);
-  -webkit-backface-visibility: hidden;
+  -webkit-transform: rotateY(180deg);
+  -moz-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
   position: absolute;
 }
 
