@@ -5,6 +5,16 @@
 <meta name="viewport" content="initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,width=device-width"/>
 
 <style>
+  * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+
   div#screens > div { display: none; }
   div#screens > div.active { display: block;}
   div#go { background-image:url("ninjastar.jpg");
@@ -83,10 +93,6 @@
       <tr>
         <td>AIRTIME</td>
         <td id="airtime"></td>
-      </tr>
-      <tr>
-        <td>JERK</td>
-        <td id="jerk">you</td>
       </tr>
       <tr>
         <td>TOTAL SCORE</td>
@@ -168,10 +174,10 @@ function imaninja() {
   // invoke throw.doit
   makeActive("go");
   document.getElementById("go").style.height = window.innerHeight + "px";
-  document.getElementById('go').onmousedown = function() {
+  document.getElementById('go').ontouchstart = function() {
     document.getElementById("go").style.backgroundSize = "60%";
   }
-  document.getElementById('go').onmouseup = function() {
+  document.getElementById('go').ontouchend = function() {
     document.getElementById("go").style.backgroundColor = "#FFF";
     ninjathrow.doit(success_throw, failure_throw);
     makeActive("flying");
@@ -180,10 +186,11 @@ function imaninja() {
     var degrees = 0;
 
     setInterval(function() {
-        degrees += 30;
+        degrees += 10;
+        degrees = degrees % 360;
         shuriken.style.transform =  "rotate(" + degrees + "deg)";
         shuriken.style.webkitTransform =  "rotate(" + degrees + "deg)";
-    }, 300);
+    }, 20);
     document.getElementById("flying").style.height = window.innerHeight + "px";
   }
 }

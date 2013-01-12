@@ -29,6 +29,8 @@
   var start_time;
   var end_time;
 
+  var timeout_handle;
+
 
   function handleOrientation(event) {
          var beta = event.beta;
@@ -87,6 +89,7 @@
                      score["rotations"] = score["rotations"].toFixed(1);
                      score["airtime"] = airtime;
 
+                     clearTimeout(timeout_handle);
                      success_fn(score);
 //                 }
              }
@@ -121,6 +124,7 @@
       oldmags = new Array();
       max_mag = 0;
     
+      timeout_handle = window.setTimeout(failure, 5000);
       old_x = 0;
       old_y = 0;
       old_z = 0;
