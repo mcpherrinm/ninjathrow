@@ -5,45 +5,76 @@
 <meta name="viewport" content="initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
 
 <style>
-  body.connected #login { display: none; }
-  body.connected #logout { display: block; }
-  body.not_connected #login { display: block; }
-      body.not_connected #logout { display: none; }
+  div#screens > div { display: none; }
+  div#screens > div.active { display: block;}
 </style>
+<link rel='stylesheet' href='bootstrap.min.css' type='text/css'>
+<link rel='stylesheet' href='style.css' type='text/css'>
+<link rel='stylesheet' href='bootstrap-responsive.min.css'>
 
 
 </head>
 <body>
- <div id="login">
-   <p><button onClick="loginUser();">Login</button></p>
- </div>
- <div id="logout">
-   <p><button  onClick="FB.logout();">Logout</button></p>
- </div>
-
- <script>
-   function loginUser() {    
-     FB.login(function(response) { }, {scope:'email'});     
-     }
- </script>
-
-
 <div id="fb-root"></div>
-<div id="user-info"></div>
-<a href="#" onclick="publishStory();">Publish feed story</a><br>
 
+<!-- display pages: -->
+<div id="screens">
+  <div class="active" id="loading">Loading...</div>
+  <div id="login"><input type=button onclick="FB.login(function(response) { }, {scope:'email'});" value="LOGIN"></div>
+  <div id="ready">
+    <div class="container">
+      <h1 class='title'>ARE YOU A NINJA?</h1>
+      <img src="ninja.jpg" alt="" class="ninja-img" />
+      <div class="btn btn-primary">
+        <a href="#" onclick="imaninja()">YES!</a>
+      </div>
+    </div>
+  </div>
+  <div id="go">
+    <div class="container">
+      <h1 class='title'>PROVE IT<h1>
+      <img src="ninja.jpg" alt="" class="ninja-img" />
+      <h1 class='title'>THROW IT<h1>
+    </div>
+  </div>
+  <div id="nope">NOT GOOD ENOUGH <input type=button onclick="imaninja()" value="TRY AGAIN" ></div>
+  <div id="success">
+    <div class="container">
+    <h1 class='title'>YOU ARE A NINJA</h1>
+    <div onclick="publishStory()" class="btn btn-primary">
+      POST TO FB
+    </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="throw.js"></script>
 <script>
 "use strict";
+
+function makeActive(id) {
+  // Unset as active
+  var actives = document.getElementsByClassName('active');
+  for(var i = 0; i < actives.length; i++) {
+    actives[i].className = "";
+  }
+  document.getElementById(id).className = "active";
+};
+
 function handleStatusChange(response) {
   document.body.className = response.authResponse ? 'connected' : 'not_connected';
   if (response.authResponse) {
     console.log(response);
     updateUserInfo(response);
+  } else {
+    console.log("Not logged in");
   }
 }
 function updateUserInfo(response) {
   FB.api('/me', function(response) {
-    document.getElementById('user-info').innerHTML = '<img src="https://graph.facebook.com/' + response.id + '/picture">' + response.name;
+    console.log(response.name + " is logged in");
+    makeActive("ready");
   });
 }
 
@@ -56,7 +87,11 @@ window.fbAsyncInit = function() {
     xfbml      : true  // parse XFBML
   });
 
+
+  console.log("making login active");
+  makeActive("login");
   FB.Event.subscribe('auth.statusChange', handleStatusChange);
+
 };
 
 // Load the SDK Asynchronously
@@ -67,6 +102,21 @@ window.fbAsyncInit = function() {
    js.src = "//connect.facebook.net/en_US/all.js";
    ref.parentNode.insertBefore(js, ref);
  }(document));
+
+function imaninja() {
+  // invoke throw.doit
+  ninjathrow.doit(success_throw, failure_throw);
+  makeActive("go");
+}
+
+function success_throw(score) {
+  makeActive("success");
+}
+
+function failure_throw(score) {
+  makeActive("nope");
+}
+
 
 function publishStory() {
   FB.ui({
