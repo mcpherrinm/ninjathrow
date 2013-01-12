@@ -25,6 +25,7 @@
             <li> beta orientation: <span id="beta"></span></li>
             <li> gamma orientation: <span id="gamma"></span></li>
             <li> sum of beta orientation: <span id="sumbeta"></span></li>
+            <li> difference: <span id="diff"></span></li>
         </ul>
 
         <input type="button" onclick="reset()" value="RESET">
@@ -54,6 +55,14 @@
             var min_x = 0;
             var min_y = 0;
             var min_z = 0;
+            
+            
+            var old_x = 0;
+            var old_y = 0;
+            var old_z = 0;
+
+            var max_diff = 0;
+            var diff = 0;
 
             var gamma = 0;
             var beta = 0;
@@ -116,6 +125,14 @@
                     x = event.accelerationIncludingGravity.x;
                     y = event.accelerationIncludingGravity.y;
                     z = event.accelerationIncludingGravity.z;
+                    old_x = document.getElementById("X").innerHTML;
+                    old_y = document.getElementById("Y").innerHTML;
+                    old_z = document.getElementById("Z").innerHTML
+
+                    diff = Math.sqrt((x-old_x)*(x-old_x) + (y-old_y)*(y-old_y) + (x-old_z)*(z-old_z));
+                    if(diff > max_diff ) {
+                      max_diff = diff;
+                    }
 
                     mag = Math.sqrt(x*x + y*y + z*z); 
 
@@ -143,7 +160,7 @@
                     }
 
         
-                    data.push([tick, mag]);
+                    data.push([tick, diff]);
                     tick = tick + 1;
 
                     document.getElementById("X").innerHTML = x;
@@ -160,6 +177,7 @@
 
                     document.getElementById("mag").innerHTML = mag;
                     document.getElementById("maxmag").innerHTML = max_mag;
+                    document.getElementById("diff").innerHTML = max_diff;
 
 
                 }
