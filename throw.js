@@ -81,6 +81,7 @@
                  if (variance < airborne_threshold) {
                      state = "AIRBORNE";
                      document.getElementById("status").innerHTML = "AIRBORNE";
+                     sumbeta = 0;
                      airtime += 1;
 
                      old_x = x;
@@ -92,7 +93,6 @@
          }
 
          if (state == "AIRBORNE") {
-             sumbeta = 0;
              airtime += 1;
              var diff = Math.sqrt((x-old_x)*(x-old_x) + (y-old_y)*(y-old_y) + (x-old_z)*(z-old_z));
 
