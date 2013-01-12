@@ -122,8 +122,10 @@
                      score["total"] = 0;
                      score["total"] += (sumbeta / 360) * 100; // 100 points per rotation
                      score["total"] += 100*airtime; // 100 points per tick of airtime
+                     score["total"] = score["total"].toFixed(0);
 
                      score["rotations"] = sumbeta / 360;
+                     score["rotations"] = score["rotations"].toFixed(1);
                      score["airtime"] = airtime;
 
                      success_fn(score);
