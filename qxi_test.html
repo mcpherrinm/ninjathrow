@@ -124,14 +124,14 @@
                     x = event.accelerationIncludingGravity.x;
                     y = event.accelerationIncludingGravity.y;
                     z = event.accelerationIncludingGravity.z;
-                    old_x = document.getElementById("X").innerHTML;
-                    old_y = document.getElementById("Y").innerHTML;
-                    old_z = document.getElementById("Z").innerHTML
 
                     diff = Math.sqrt((x-old_x)*(x-old_x) + (y-old_y)*(y-old_y) + (x-old_z)*(z-old_z));
                     if(diff > max_diff ) {
                       max_diff = diff;
                     }
+                    old_x = x;
+                    old_y = y;
+                    old_z = z;
 
                     mag = Math.sqrt(x*x + y*y + z*z); 
 
