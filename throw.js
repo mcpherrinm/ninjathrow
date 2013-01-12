@@ -24,8 +24,13 @@
   var oldbeta = null;
   var dbeta = 0;
 
+  var start_time;
+  var end_time;
+
+
   function handleOrientation(event) {
          var beta = event.beta;
+
          if (oldbeta === null) {
              oldbeta = beta;
          }
@@ -40,9 +45,6 @@
 
   // FILL IN YOUR CALL BACK HANDLER CODE HERE
   function handleSomethingOrOther(event) {
-
-        var start_time;
-        var end_time;
 
          var x = event.accelerationIncludingGravity.x;
          var y = event.accelerationIncludingGravity.y;
@@ -83,7 +85,6 @@
                      start_time = new Date().getTime();
 
                      state = "AIRBORNE";
-                     document.getElementById("status").innerHTML = "AIRBORNE";
                      sumbeta = 0;
 
                      old_x = x;
