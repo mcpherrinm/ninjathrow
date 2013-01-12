@@ -8,6 +8,9 @@
   div#screens > div { display: none; }
   div#screens > div.active { display: block;}
 </style>
+<link rel='stylesheet' href='bootstrap.min.css' type='text/css'>
+<link rel='stylesheet' href='style.css' type='text/css'>
+<link rel='stylesheet' href='bootstrap-responsive.min.css'>
 
 
 </head>
@@ -18,10 +21,33 @@
 <div id="screens">
   <div class="active" id="loading">Loading...</div>
   <div id="login"><input type=button onclick="FB.login(function(response) { }, {scope:'email'});" value="LOGIN"></div>
-  <div id="ready">ARE YOU A NINJA? <input type=button onclick="imaninja()" value="YES!"></div>
-  <div id="go">PROVE YOURSELF</div>
+  <div id="ready">
+    <div class="container">
+    <h1 class='title'>ARE YOU A NINJA?</h1>
+    <img src="ninja.jpg" alt="" class="ninja-img" />
+    <div class="btn btn-primary">
+      <a href="#" onclick="imaninja()">YES!</a>
+    </div>
+    <input type=button onclick="imaninja()" value="YES!">
+    </div>
+  </div>
+  <div id="go">
+    <div class="container">
+      <h1 class='title'>PROVE IT<h1>
+      <img src="ninja.jpg" alt="" class="ninja-img" />
+      <h1 class='title'>THROW IT<h1>
+    </div>
+  </div>
   <div id="nope">NOT GOOD ENOUGH <input type=button onclick="imaninja()" value="TRY AGAIN" ></div>
-  <div id="ninja">YOU ARE A NINJA <input type=button onclick="publishStory();" value="Post to FB"></div>
+  <div id="success">
+    <div class="container">
+    <h1 class='title'>YOU ARE A NINJA</h1>
+    <div onclick="publishStory()" class="btn btn-primary">
+      POST TO FB
+    </div>
+
+    </div>
+  </div>
 </div>
 
 <script src="throw.js"></script>
@@ -85,7 +111,7 @@ function imaninja() {
 }
 
 function success_throw(score) {
-  makeActive("ninja");
+  makeActive("success");
 }
 
 function failure_throw(score) {
