@@ -20,7 +20,6 @@
 <!-- display pages: -->
 <div id="screens">
   <div class="active" id="loading">Loading...</div>
-  <div id="login"><input type=button onclick="FB.login(function(response) { }, {scope:'email'});" value="LOGIN"></div>
   <div id="ready">
     <div class="container">
       <h1 class='title'>ARE YOU A NINJA?</h1>
@@ -37,10 +36,38 @@
       <h1 class='title'>THROW IT<h1>
     </div>
   </div>
-  <div id="nope">NOT GOOD ENOUGH <input type=button onclick="imaninja()" value="TRY AGAIN" ></div>
+  <div id="nope">
+    <div class="container">
+      <h1 class='title'>NOT GOOD ENOUGH</h1>
+      <h1 class='title'>YOU DISHONOUR YOUR FAMILY</h1>
+      <div class="btn btn-primary">
+        <a href="#" onclick="imaninja()">TRY AGAIN</a>
+      </div>
+    </div>
+  
+  </div>
   <div id="success">
     <div class="container">
     <h1 class='title'>YOU ARE A NINJA</h1>
+    <h2 class=''>SCORE</h2>
+    <table class="table table-bordered">
+      <tr>
+        <td>ROTATIONS</td>
+        <td>7</td>
+      </tr>
+      <tr>
+        <td>AIRTIME</td>
+        <td>5s</td>
+      </tr>
+      <tr>
+        <td>JERK</td>
+        <td>1000</td>
+      </tr>
+      <tr>
+        <td>TOTAL SCORE</td>
+        <td>600</td>
+      </tr>
+    </table>
     <div onclick="publishStory()" class="btn btn-primary">
       POST TO FB
     </div>
@@ -74,7 +101,7 @@ function handleStatusChange(response) {
 function updateUserInfo(response) {
   FB.api('/me', function(response) {
     console.log(response.name + " is logged in");
-    makeActive("ready");
+//    makeActive("ready");
   });
 }
 
@@ -88,8 +115,7 @@ window.fbAsyncInit = function() {
   });
 
 
-  console.log("making login active");
-  makeActive("login");
+  //makeActive("login");
   FB.Event.subscribe('auth.statusChange', handleStatusChange);
 
 };
@@ -118,6 +144,19 @@ function failure_throw(score) {
 }
 
 
+function loginAndPost() {
+FB.getLoginStatus(function(response) {
+  if (response.status === 'connected') {
+    publishStory();
+  } else if (response.status === 'not_authorized') {
+    makeActive("ready");
+    document.write("You didn't authorize the app");
+  } else {
+    FB.login(function(response) { publishStory(); }, {scope:'email'});
+  }
+ });
+}
+
 function publishStory() {
   FB.ui({
     method: 'feed',
@@ -132,6 +171,10 @@ function publishStory() {
   });
   return false;
 }
+
+
+// Document ready by now.
+makeActive("ready");
 </script>
 </body>
 </html>
