@@ -22,8 +22,27 @@
   var tick = 0;
   var state = "READY";
 
+  var sumbeta = 0;
+  var oldbeta = null;
+  var dbeta = 0;
+
+  function handleOrientation(event) {
+         var beta = event.beta;
+         if (oldbeta === null) {
+             oldbeta = beta;
+         }
+
+         dbeta = Math.abs(Number(oldbeta.toFixed()) - Number(beta.toFixed()));
+
+         if (dbeta > 10) {
+             sumbeta = sumbeta + dbeta;
+             oldbeta = beta;
+         }
+  }
+
   // FILL IN YOUR CALL BACK HANDLER CODE HERE
   function handleSomethingOrOther(event) {
+
          var x = event.accelerationIncludingGravity.x;
          var y = event.accelerationIncludingGravity.y;
          var z = event.accelerationIncludingGravity.z;
@@ -83,10 +102,13 @@
              if (diff > landing_threshold) {
                  state = "DONE";
 
-                 if (airtime <= 3) {
+                 if (airtime <= 2) {
                      failure_fn(0);
                  } else {
-                     success_fn(900);
+                     var score = 0;
+                     score += (sumbeta / 360) * 100; // 100 points per rotation
+                     score += 100*airtime; // 100 points per tick of airtime
+                     success_fn(score);
                  }
              }
          }
@@ -120,6 +142,7 @@
       // START YOUR CALL BACKS HERE
       // window.addEventListener('devicemotion'...
       window.ondevicemotion = handleSomethingOrOther;
+      window.ondeviceorientation = handleOrientation;
 
       return true;
     }
