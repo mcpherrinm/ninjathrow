@@ -54,5 +54,7 @@ td:last-child {
 #thumb-img {
   height: 200px;
   background-image:url('thumbprint.gif');
-  background-size: 60px 200px;
+  background-size: 140px 200px;
+  background-repeat: no-repeat;
+  background-position: center;
 }
