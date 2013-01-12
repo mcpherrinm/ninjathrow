@@ -34,10 +34,11 @@
 
       // START YOUR CALL BACKS HERE
       // window.addEventListener('devicemotion'...
+      window.setTimeout(function() {success_fn(9000)}, 1500);
 
       return true;
     }
   };
 
   window.ninjathrow = ninjathrow;
-})();
+})(window);
