@@ -25,14 +25,16 @@
             <li> beta orientation: <span id="beta"></span></li>
             <li> gamma orientation: <span id="gamma"></span></li>
             <li> sum of beta orientation: <span id="sumbeta"></span></li>
-            <li> difference: <span id="diff"></span></li>
+
+            <li> airtime: <span id="airtime"></span></li>
         </ul>
+
+        <h1 id="status">READY</h1>
 
         <input type="button" onclick="reset()" value="RESET">
         <input type="button" onclick="makegraph()" value="MAKE GRAPH">
 
         <div style="height:250px" id="chart_div" />
-
 
         <script type="text/javascript">
             "use strict;"
@@ -45,8 +47,12 @@
             var y = 0;
             var z = 0;
 
+            var airtime = 0;
+
+            var oldmags = new Array();
             var mag = 0;
             var max_mag = 0;
+            var min_samples = 3;
 
             var max_x = 0;
             var max_y = 0;
@@ -55,14 +61,6 @@
             var min_x = 0;
             var min_y = 0;
             var min_z = 0;
-            
-            
-            var old_x = 0;
-            var old_y = 0;
-            var old_z = 0;
-
-            var max_diff = 0;
-            var diff = 0;
 
             var gamma = 0;
             var beta = 0;
@@ -73,18 +71,14 @@
 
             var sumbeta = 0;
 
-            var tick = 1;
+            var tick = 0;
+            var state = "READY";
 
             var data = new Array();
             data[0] = ['tick', 'force (N)'];
-//            data[1] = [0, 0];
 
-            function reset() {
-                max_x = max_y = max_z = min_x = min_y = min_z = max_mag = alpha = beta = gamma = sumbeta = oldbeta =   0;
-                tick = 1;
-                data = new Array();
-                data[0] = ['tick', 'force (N)'];
-            }
+            var variances = new Array();
+            variances[0] = ['tick', 'variance'];
 
             function initgraph() {
                 chart = new google.visualization.LineChart(document.getElementById('chart_div'));
@@ -94,7 +88,18 @@
                 var options = {
                     title: 'stuff'
                 };
-                chart.draw(google.visualization.arrayToDataTable(data), options);
+                chart.draw(google.visualization.arrayToDataTable(variances), options);
+            }
+
+            function reset() {
+                max_x = max_y = max_z = min_x = min_y = min_z = max_mag = alpha = beta = gamma = sumbeta = oldbeta = airtime =  0;
+                tick = 0;
+                data = new Array();
+                variances = new Array();
+            data[0] = ['tick', 'force (N)'];
+            variances[0] = ['tick', 'variance'];
+            state = "READY";
+                                document.getElementById("status").innerHTML = "READY";
             }
 
             function devOrientHandler(e) {
@@ -115,7 +120,6 @@
                     document.getElementById("beta").innerHTML = beta; 
                     document.getElementById("gamma").innerHTML = gamma;
                     document.getElementById("sumbeta").innerHTML = sumbeta;
-                console.log(e);
             }
 
             window.addEventListener('deviceorientation', devOrientHandler, false);
@@ -125,14 +129,6 @@
                     x = event.accelerationIncludingGravity.x;
                     y = event.accelerationIncludingGravity.y;
                     z = event.accelerationIncludingGravity.z;
-
-                    diff = Math.sqrt((x-old_x)*(x-old_x) + (y-old_y)*(y-old_y) + (x-old_z)*(z-old_z));
-                    if(diff > max_diff ) {
-                      max_diff = diff;
-                    }
-                    old_x = x;
-                    old_y = y;
-                    old_z = z;
 
                     mag = Math.sqrt(x*x + y*y + z*z); 
 
@@ -159,9 +155,53 @@
                         max_mag = mag;
                     }
 
-        
-                    data.push([tick, diff]);
+                    data.push([tick, mag]);
                     tick = tick + 1;
+
+                    if (mag > 18 && state == "READY") {
+                        document.getElementById("status").innerHTML = "THROWING";
+                        state = "THROWING";
+                        oldmags[0] = mag;
+
+                    }
+
+                    if (state == "THROWING" || state == "AIRBORNE") {
+                        oldmags.push(mag);
+
+                        if (oldmags.length >= min_samples) {
+                            // see if the last min_samples mags are all within close variance
+
+                            // compute variance
+                            var mean = 0;
+                            var variance = 0;
+
+                            for (var i = oldmags.length - min_samples; i < oldmags.length; i++) {
+                                mean += oldmags[i];
+                            }
+
+                            mean = mean / min_samples;
+
+                            for (var i = oldmags.length - min_samples; i < oldmags.length; i++) {
+                                variance += Math.pow(oldmags[i] - mean, 2);
+                            }
+
+                            variance = variance / min_samples;
+
+                            variances.push([tick, variance]);
+
+                            if (variance < 10) {
+                                state = "AIRBORNE";
+                                document.getElementById("status").innerHTML = "AIRBORNE";
+                                airtime += 1;
+                            }
+
+                            if (state == "AIRBORNE" && variance > 10) {
+                                state = "DONE";
+                                document.getElementById("status").innerHTML = "DONE";
+                                document.getElementById("airtime").innerHTML = airtime;
+                            }
+                        }
+                    }
 
                     document.getElementById("X").innerHTML = x;
                     document.getElementById("Y").innerHTML = y;
@@ -177,7 +217,6 @@
 
                     document.getElementById("mag").innerHTML = mag;
                     document.getElementById("maxmag").innerHTML = max_mag;
-                    document.getElementById("diff").innerHTML = max_diff;
 
 
                 }
