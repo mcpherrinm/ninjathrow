@@ -9,7 +9,7 @@
 
   var launch_threshold = 29;
   var airborne_threshold = 10;
-  var landing_threshold = 12;
+  var landing_threshold = 20;
 
   var oldmags = new Array();
   var max_mag = 0;
@@ -109,7 +109,7 @@
       oldmags = new Array();
       max_mag = 0;
     
-      timeout_handle = window.setTimeout(failure, 5000);
+      timeout_handle = window.setTimeout(function() {state = "DONE"; failure();}, 5000);
       old_x = null;
       old_y = null;
       old_z = null;
