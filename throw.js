@@ -12,7 +12,6 @@
   var landing_threshold = 19;
 
   var oldmags = new Array();
-  var max_mag = 0;
   var min_samples = 3;
 
   var old_x = 0;
@@ -55,6 +54,7 @@
 
          var mag = Math.sqrt(x*x + y*y + z*z); 
 
+
          // this is our first tick; init values for old accelerations
       if (old_x === null && old_y === null && old_z == null) {
           old_x = x;
@@ -64,8 +64,41 @@
 
       if (state != "DONE") {
 
+          if (state == "READY") {
+                         oldmags.push(mag);
 
-         tick = tick + 1;
+                        if (oldmags.length >= min_samples) {
+                            // see if the last min_samples mags are all within close variance
+
+                            // compute variance
+                            var mean = 0;
+                            var variance = 0;
+
+                            for (var i = oldmags.length - min_samples; i < oldmags.length; i++) {
+                                mean += oldmags[i];
+                            }
+
+                            mean = mean / min_samples;
+
+                            for (var i = oldmags.length - min_samples; i < oldmags.length; i++) {
+                                variance += Math.pow(oldmags[i] - mean, 2);
+                            }
+
+                            variance = variance / min_samples;
+
+                            if (variance < airborne_threshold) {
+                                state = "AIRBORNE";
+                                airtime += 1;
+
+                                old_x = x;
+                                old_y = y;
+                                old_z = z;
+                            }
+                        }
+          }
+
+          if (state == "AIRBORNE") {
+             tick = tick + 1;
              airtime += 1;
              var diff = Math.sqrt((x-old_x)*(x-old_x) + (y-old_y)*(y-old_y) + (z-old_z)*(z-old_z));
 
@@ -85,6 +118,7 @@
                      clearTimeout(timeout_handle);
                      success_fn(score);
              }
+          }
   }
 
   };
@@ -107,7 +141,6 @@
 
       airtime = 0;
       oldmags = new Array();
-      max_mag = 0;
     
       timeout_handle = window.setTimeout(function() {state = "DONE"; failure();}, 5000);
       old_x = null;
