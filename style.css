@@ -42,3 +42,7 @@ tr:last-child {
 td:last-child {
   text-align: right;
 }
+
+.container {
+  margin-bottom: 10px;
+}
