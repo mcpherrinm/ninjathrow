@@ -11,6 +11,7 @@
            background-color: #FFF;
            background-repeat: no-repeat;
            background-position: center center;
+           background-size: 50%;
            width: 100%;
            margin: 0; padding 0;
         }
@@ -160,7 +161,7 @@ function imaninja() {
   makeActive("go");
   document.getElementById("go").style.height = window.innerHeight + "px";
   document.getElementById('go').onmousedown = function() {
-    document.getElementById("go").style.backgroundSize = "50%";
+    document.getElementById("go").style.backgroundSize = "60%";
   }
   document.getElementById('go').onmouseup = function() {
     document.getElementById("go").style.backgroundColor = "#FFF";
