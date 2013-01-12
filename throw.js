@@ -59,6 +59,7 @@
          if (mag > launch_threshold && state == "READY") {
              state = "THROWING";
              oldmags[0] = mag;
+             document.body.style.background = "red";
          }
 
          if (state == "THROWING") {
@@ -85,6 +86,7 @@
 
                  if (variance < airborne_threshold) {
                      state = "AIRBORNE";
+                     document.body.style.background = "blue";
                      sumbeta = 0;
                      airtime += 1;
 
@@ -106,6 +108,7 @@
 
              if (diff > landing_threshold) {
                  state = "DONE";
+                     document.body.style.background = "green";
 
 //                 if (airtime <= 2) {
 //                     var score =  new Object();
@@ -171,6 +174,8 @@
       sumbeta = 0;
       oldbeta = null;
       dbeta = 0;
+      
+                     document.body.style.background = "white";
 
       // START YOUR CALL BACKS HERE
       // window.addEventListener('devicemotion'...
