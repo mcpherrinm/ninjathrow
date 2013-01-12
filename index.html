@@ -218,8 +218,8 @@ function imaninja() {
 var score = 0;
 function success_throw(the_score) {
   makeActive("success");
-  document.getElementById("rotations").textContent =
-    "" + the_score.rotations;
+  document.getElementById("rotations").textContent = "" + the_score.rotations_raw + " x 100 = "
+     + the_score.rotations;
   document.getElementById("airtime").textContent =
     "" + the_score.airtime;
   document.getElementById("total_score").textContent =

@@ -110,8 +110,9 @@
                  state = "DONE";
                      var score =  new Object();
 
+                     score.rotations_raw = Math.floor((sumbeta / 360) * 100) / 100;
                      score.rotations = Math.floor((sumbeta / 360) * 100);
-                     score.airtime   = Math.floor(100*airtime);
+                     score.airtime   = Math.floor(10*airtime);
 
                      score.total = score.rotations + score.airtime;
 
