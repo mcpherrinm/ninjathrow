@@ -9,10 +9,12 @@
   -webkit-transform: rotateY(180deg);
   -moz-transform: rotateY(180deg);
   }
+
   div#screens > div.active {
   -webkit-transform: rotateY(0);
   -moz-transform: rotateY(0);
   }
+
   * {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -23,7 +25,7 @@
   }
 
 
-  div#go { background-image:url("ninjastar.jpg");
+  div#instructions1 { background-image:url("ninjastar.jpg");
            background-color: #FFF;
            background-repeat: no-repeat;
            background-position: center center;
@@ -31,6 +33,7 @@
            width: 100%;
            margin: 0; padding 0;
         }
+
   div#flying {
            background-color: #FFF;
            background-repeat: no-repeat;
@@ -40,6 +43,7 @@
            margin: 0; padding 0;
            overflow: hidden;
   }
+
   div#shuriken {
            background-image:url("ninjastar.jpg");
            background-color: #FFF;
@@ -50,7 +54,7 @@
            margin: 0; padding 0;
            overflow: hidden;
   }
-  div#go .bottom {
+  div#instructions1 .bottom {
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -69,6 +73,7 @@
 <!-- display pages: -->
 <div id="screens">
   <div class="active" id="loading">Loading...</div>
+
   <div id="ready">
     <div class="container">
       <h1 class='title'>ARE YOU A NINJA?</h1>
@@ -78,16 +83,37 @@
       </div>
     </div>
   </div>
-  <div id="go">
+
+  <div id="instructions1">
     <div class="container"> 
       <h1 class='title'>PROVE IT</h1>
     </div>
       <h1 class='title bottom'>THROW IT</h1>
   </div>
+
+  <div id="instructions2">
+      <!-- PROVE IT -->
+      <!-- more spin = more points -->
+      <!-- longer airtime = more points -->
+      <!-- button: BEGIN -->
+  </div>
+
+  <div id="launching1">
+      <!-- READY? -->
+      <!-- Place thumb here -->
+      <!-- button: big thumbprint icon -->
+  </div>
+
+  <div id="launching2">
+      <!-- THROW!! -->
+      <!-- Throw phone -->
+  </div>
+
   <div id="flying">
       <div id="shuriken">
       </div>
   </div>
+
   <div id="nope">
     <div class="container">
       <h1 class='title'>NOT GOOD ENOUGH</h1>
@@ -96,8 +122,8 @@
         <a href="#" onclick="imaninja()">TRY AGAIN</a>
       </div>
     </div>
-  
   </div>
+
   <div id="success">
     <div class="container">
     <h1 class='title'>YOU ARE A NINJA</h1>
@@ -189,15 +215,15 @@ window.fbAsyncInit = function() {
 
 function imaninja() {
   // invoke throw.doit
-  makeActive("go");
-  document.getElementById("go").style.height = window.innerHeight + "px";
-  document.getElementById('go').ontouchstart = function() {
-    document.getElementById("go").style.backgroundSize = "60%";
+  makeActive("instructions1");
+  document.getElementById("instructions1").style.height = window.innerHeight + "px";
+  document.getElementById("instructions1").ontouchstart = function() {
+    document.getElementById("instructions1").style.backgroundSize = "60%";
   }
-  document.getElementById('go').ontouchend = function() {
+  document.getElementById("instructions1").ontouchend = function() {
       // reset size of shuriken image for subsequent attempts
-    document.getElementById("go").style.backgroundSize = "50%";
-    document.getElementById("go").style.backgroundColor = "#FFF";
+    document.getElementById("instructions1").style.backgroundSize = "50%";
+    document.getElementById("instructions1").style.backgroundColor = "#FFF";
     ninjathrow.doit(success_throw, failure_throw);
     makeActive("flying");
 
