@@ -25,13 +25,18 @@
   }
 
 
-  div#instructions1 { background-image:url("ninjastar.jpg");
+  div#instructions1 {
+/*           background-image:url("ninjastar.jpg"); */
            background-color: #FFF;
            background-repeat: no-repeat;
            background-position: center center;
            background-size: 50%;
            width: 100%;
            margin: 0; padding 0;
+        }
+
+        div#launching1 {
+           background-image:url("ninjastar.jpg");
         }
 
   div#flying {
@@ -54,6 +59,7 @@
            margin: 0; padding 0;
            overflow: hidden;
   }
+
   div#instructions1 .bottom {
     position: absolute;
     bottom: 0;
@@ -79,19 +85,30 @@
       <h1 class='title'>ARE YOU A NINJA?</h1>
       <img src="ninja.jpg" alt="" class="ninja-img" />
       <div class="btn btn-primary">
-        <a href="#" onclick="imaninja()">YES!</a>
+        <a href="#" onclick="nextpage()">YES!</a>
       </div>
     </div>
   </div>
 
   <div id="instructions1">
     <div class="container"> 
-      <h1 class='title'>PROVE IT</h1>
-    </div>
-      <h1 class='title bottom'>THROW IT</h1>
+        <h1 class='title'>PROVE IT.</h1>
+        <h1 class='title'>THROW YOUR PHONE.</h1>
+        <img src="ninja.jpg" alt="" class="ninja-img" />
+      <div class="btn btn-primary">
+          <a href="#" onclick="nextpage()">NEXT</a>
+      </div>
+      </div> <!-- picture of shuriken spinning -->
   </div>
 
   <div id="instructions2">
+      <div class="container">
+          <h1 class='title'>THROW IT LIKE A SHURIKEN</h1>
+
+          <div class="btn btn-primary">
+              <a href="#" onclick="imaninja()">BEGIN</a>
+          </div>
+      </div>
       <!-- PROVE IT -->
       <!-- more spin = more points -->
       <!-- longer airtime = more points -->
@@ -99,14 +116,13 @@
   </div>
 
   <div id="launching1">
+      <div class="container">
+          <h1 class='title' id='launch_text'>READY?</h1>
+          <h1 class='title' id='launch_help'>PLACE THUMB HERE</h1>
+      </div>
       <!-- READY? -->
       <!-- Place thumb here -->
       <!-- button: big thumbprint icon -->
-  </div>
-
-  <div id="launching2">
-      <!-- THROW!! -->
-      <!-- Throw phone -->
   </div>
 
   <div id="flying">
@@ -157,6 +173,8 @@
 <script src="throw.js"></script>
 <script>
 "use strict";
+var pages = ["ready", "instructions1", "instructions2"];
+var active_page = 0;
 
 // prevent scrolling
 document.body.addEventListener('touchmove', function(event) {
@@ -213,17 +231,26 @@ window.fbAsyncInit = function() {
    ref.parentNode.insertBefore(js, ref);
  }(document));
 
+ function nextpage () {
+     active_page += 1;
+     var this_page = pages[active_page];
+
+     makeActive(this_page);
+ }
+
 function imaninja() {
   // invoke throw.doit
-  makeActive("instructions1");
-  document.getElementById("instructions1").style.height = window.innerHeight + "px";
-  document.getElementById("instructions1").ontouchstart = function() {
-    document.getElementById("instructions1").style.backgroundSize = "60%";
+  makeActive("launching1");
+  document.getElementById("launching1").style.height = window.innerHeight + "px";
+  document.getElementById("launching1").ontouchstart = function() {
+    document.getElementById("launching1").style.backgroundSize = "60%";
+    document.getElementById("launch_text").innerHTML="THROW!";
+    document.getElementById("launch_help").innerHTML="THROW PHONE NOW!";
   }
-  document.getElementById("instructions1").ontouchend = function() {
+  document.getElementById("launching1").ontouchend = function() {
       // reset size of shuriken image for subsequent attempts
-    document.getElementById("instructions1").style.backgroundSize = "50%";
-    document.getElementById("instructions1").style.backgroundColor = "#FFF";
+    document.getElementById("launching1").style.backgroundSize = "50%";
+    document.getElementById("launching1").style.backgroundColor = "#FFF";
     ninjathrow.doit(success_throw, failure_throw);
     makeActive("flying");
 
