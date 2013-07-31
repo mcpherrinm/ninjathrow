@@ -103,8 +103,9 @@
   <div id="instructions1">
     <div class="container"> 
         <h1 class='title'>PROVE IT</h1>
-        <h1 class='title'>THROW YOUR PHONE</h1>
+        <h2>THROW YOUR PHONE</h2>
         <img src="ninja.jpg" alt="" class="ninja-img" />
+        <h2>LIKE A SHURIKEN</h2>
       <div class="btn btn-primary">
           <a href="#" onclick="nextpage()">NEXT</a>
       </div>
@@ -113,8 +114,9 @@
 
   <div id="instructions2">
       <div class="container">
-          <h1 class='title'>THROW IT LIKE A SHURIKEN</h1>
+          <h1 class='title'>PROVE IT</h1>
           <h3>more spins = more points</h3>
+          <img src="ninja.jpg" alt="" class="ninja-img" />
           <h3>longer airtime = more points</h3>
 
           <div class="btn btn-primary">
@@ -178,9 +180,32 @@
     <div class="btn btn-primary">
       <a href="#" onclick="imaninja()">TRY AGAIN</a>
     </div>
-
     </div>
   </div>
+
+  <div id="score">
+      <div class="container">
+          <h1 class='bigtitle' id='scoretitle'>SCORE</h1>
+          <h1 class='title' id='scorepts'></h1>
+          <h1 class='bigtitle' id='rating'>RATING:</h1>
+          <h1 class='title' id='ratingpts'><span id="rh1">PEA</span><span id="rh2">SANT</span></h1>
+          <div id='scorebtn' class="btn btn-primary">
+              <a href="#">CONTINUE</a>
+          </div>
+      </div>
+  </div>
+
+  <div id="detailscore">
+      <div class="container">
+          <h1 class='bigtitle' id='score'>SCORE</h1>
+          <h1 class='bigtitle' id='scorepts'></h1>
+          <h1 class='bigtitle' id='rating'>RATING:</h1>
+          <h1 class='bigtitle' id='ratingpts'></h1>
+          <div class="btn btn-primary">
+          </div>
+      </div>
+  </div>
+
 </div>
 
 <script src="throw.js"></script>
@@ -285,13 +310,49 @@ function imaninja() {
 // hobo:
 var score = 0;
 function success_throw(the_score) {
-  makeActive("success");
-  document.getElementById("rotations").textContent = "" + the_score.rotations_raw + " x 100 = "
-     + the_score.rotations;
-  document.getElementById("airtime").textContent =
-    "" + the_score.airtime;
-  document.getElementById("total_score").textContent =
-    "" + the_score.total;
+//  document.getElementById("rotations").textContent = "" + the_score.rotations_raw + " x 100 = "
+//     + the_score.rotations;
+//  document.getElementById("airtime").textContent =
+//    "" + the_score.airtime;
+//  document.getElementById("total_score").textContent =
+//    "" + the_score.total;
+
+var ratings = [
+    [0, "PEA", "SANT"],
+    [5000, "WAR", "RIOR"],
+    [10000, "NIN", "JA"],
+    [25000, "SHO", "GUN"]];
+
+
+// QUICK HIDE EVERYTHING!
+  document.getElementById("scoretitle").style.visibility = "hidden";
+  document.getElementById("scorepts").style.visibility = "hidden";
+  document.getElementById("rating").style.visibility = "hidden";
+//  document.getElementById("ratingpts").style.visibility = "hidden";
+  document.getElementById("scorebtn").style.visibility = "hidden";
+  document.getElementById("rh1").style.visibility = "hidden";
+  document.getElementById("rh2").style.visibility = "hidden";
+
+  document.getElementById("scorepts").textContent = the_score.total;
+
+  for (var i = 0; i < ratings.length; i++) {
+      if (the_score.total > ratings[i][0]) {
+          document.getElementById("rh1").textContent = ratings[i][1];
+          document.getElementById("rh2").textContent = ratings[i][2];
+      }
+  }
+
+  makeActive("score");
+
+  setInterval (function(){document.getElementById("scoretitle").style.visibility = "visible";}, 800);
+  setInterval (function(){document.getElementById("scorepts").style.visibility = "visible";}, 1500);
+  setInterval (function(){document.getElementById("rating").style.visibility = "visible";}, 2200);
+//  setInterval (function(){document.getElementById("ratingpts").style.visibility = "visible";}, 200);
+  setInterval (function(){document.getElementById("rh1").style.visibility = "visible";}, 2900);
+  setInterval (function(){document.getElementById("rh2").style.visibility = "visible";}, 3100);
+  setInterval (function(){document.getElementById("scorebtn").style.visibility = "visible";}, 3900);
+
+
   score = the_score;
 }
 
