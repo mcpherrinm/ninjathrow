@@ -3,7 +3,12 @@
 <head>
 <title>Ninja Throw!</title>
 <meta name="viewport" content="initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,width=device-width"/>
+
+<!-- jquery 1.3.2 -->
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+
+<!-- Google graphs and charts API -->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
 <style>
   div#screens > div { 
@@ -24,7 +29,6 @@
     -ms-user-select: none;
     user-select: none;
   }
-
 
   div#instructions1 {
 /*           background-image:url("ninjastar.jpg"); */
@@ -183,14 +187,15 @@
 
   <div id="detailscore">
       <div class="container">
-          <table class="table table-bordered">
+          <div id="motionchart"></div>
+          <table class="table">
               <tr>
                   <td>Spins:</td>
                   <td id="rotations"></td>
               </tr>
               <tr>
                   <td>Airtime:</td>
-                  <td id="airtime"></td>
+                  <td><span id="airtime"></span>ms</td>
               </tr>
           </table>
           <div class="btn btn-primary">
@@ -205,10 +210,20 @@
 </div>
 
 <script src="throw.js"></script>
+
 <script>
 "use strict";
 var pages = ["ready", "instructions1", "instructions2"];
 var active_page = 0;
+var chart;
+
+// Google charts init
+google.load('visualization', '1.0', {'packages':['corechart']});
+// NOTE: technically Google wants us to provide a callback function for when the Chart API is done loading
+// but... NAAAAAHHHHHH!!
+
+// disregard above message - i suck cocks --Qifan.
+google.setOnLoadCallback(function() {chart = new google.visualization.LineChart(document.getElementById('motionchart'))});
 
 // prevent scrolling
 document.body.addEventListener('touchmove', function(event) {
@@ -305,7 +320,7 @@ function imaninja() {
 
 // hobo:
 var score = 0;
-function success_throw(the_score) {
+function success_throw(the_score, betas, gammas, accels) {
 
   document.getElementById("rotations").textContent = "" + the_score.rotations_raw;
   document.getElementById("airtime").textContent = "" + the_score.airtime;
@@ -326,7 +341,35 @@ var ratings = [
   document.getElementById("rh1").style.visibility = "hidden";
   document.getElementById("rh2").style.visibility = "hidden";
 
+  // SET UP OUR DATA
+
   document.getElementById("scorepts").textContent = the_score.total;
+
+  var d = new Array();
+  var CHART_SAMPLES = 256;
+  d.push(['Sample', 'Beta-Rot', 'Gamma-Rot', 'Accel']);
+
+  // take our array of sampled orientation/motion data and resample it to 100 points (nearest neighbor interp)
+  for (var i = 0; i < CHART_SAMPLES; i++) {
+      d.push([i, betas[Math.round((i/(CHART_SAMPLES - 1)) * betas.length)],
+                 gammas[Math.round((i/(CHART_SAMPLES - 1)) * gammas.length)],
+                 accels[Math.round((i/(CHART_SAMPLES - 1)) * accels.length)]]);
+  }
+
+  var data = google.visualization.arrayToDataTable(d);
+  
+  var options = {
+      axisTitlePosition : 'none',
+      curveType : 'function',
+      enableInteractivity : false,
+      legend : {position: 'bottom'},
+      vAxis : {textPosition: 'none'},
+      hAxis : {textPosition: 'none'}
+  
+  };
+
+chart.draw(data, options);
+
 
   for (var i = 0; i < ratings.length; i++) {
       if (the_score.total > ratings[i][0]) {
@@ -335,16 +378,17 @@ var ratings = [
       }
   }
 
+
   makeActive("score");
 
   // NOW SHOW EVERYTHING in an awesome arcade fighter game way
-  setInterval (function(){document.getElementById("scoretitle").style.visibility = "visible";}, 800);
-  setInterval (function(){document.getElementById("scorepts").style.visibility = "visible";}, 1500);
-  setInterval (function(){document.getElementById("rating").style.visibility = "visible";}, 2200);
-//  setInterval (function(){document.getElementById("ratingpts").style.visibility = "visible";}, 200);
-  setInterval (function(){document.getElementById("rh1").style.visibility = "visible";}, 2900);
-  setInterval (function(){document.getElementById("rh2").style.visibility = "visible";}, 3100);
-  setInterval (function(){document.getElementById("scorebtn").style.visibility = "visible";}, 3900);
+  setTimeout (function(){document.getElementById("scoretitle").style.visibility = "visible";}, 800);
+  setTimeout (function(){document.getElementById("scorepts").style.visibility = "visible";}, 1500);
+  setTimeout (function(){document.getElementById("rating").style.visibility = "visible";}, 2200);
+//  setTimeout (function(){document.getElementById("ratingpts").style.visibility = "visible";}, 200);
+  setTimeout (function(){document.getElementById("rh1").style.visibility = "visible";}, 2900);
+  setTimeout (function(){document.getElementById("rh2").style.visibility = "visible";}, 3100);
+  setTimeout (function(){document.getElementById("scorebtn").style.visibility = "visible";}, 3900);
 
   score = the_score;
 }

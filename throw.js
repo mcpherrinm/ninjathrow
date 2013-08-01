@@ -2,10 +2,8 @@
   "use strict";
   var library_private = 43;
 
-  var success_fn = function(score) {console.log("UNINITIALIZED");}
-  var failure_fn = function(score) {console.log("UNINITIALIZED");}
-
-  var airtime = 0;
+  var success_fn = function(score, betas, gammas, accels) {console.log("UNINITIALIZED");}
+  var failure_fn = function(score, betas, gammas, accels) {console.log("UNINITIALIZED");}
 
   var launch_threshold = 29;
   var airborne_threshold = 10;
@@ -30,9 +28,17 @@
 
   var timeout_handle;
 
+// arrays containing motion data samples
+  var betas;
+  var gammas;
+  var accels;
 
   function handleOrientation(event) {
          var beta = event.beta;
+
+         // record raw samples for later graphing
+         betas.push(beta);
+         gammas.push(event.gamma);
 
          if (oldbeta === null) {
              oldbeta = beta;
@@ -53,7 +59,7 @@
          var z = event.accelerationIncludingGravity.z;
 
          var mag = Math.sqrt(x*x + y*y + z*z); 
-
+         accels.push(mag);
 
          // this is our first tick; init values for old accelerations
       if (old_x === null && old_y === null && old_z == null) {
@@ -88,7 +94,7 @@
 
                             if (variance < airborne_threshold) {
                                 state = "AIRBORNE";
-                                airtime += 1;
+                                start_time = new Date();
 
                                 old_x = x;
                                 old_y = y;
@@ -99,7 +105,6 @@
 
           if (state == "AIRBORNE") {
              tick = tick + 1;
-             airtime += 1;
              var diff = Math.sqrt((x-old_x)*(x-old_x) + (y-old_y)*(y-old_y) + (z-old_z)*(z-old_z));
 
              old_x = x;
@@ -109,22 +114,22 @@
              if (diff > landing_threshold) {
                  state = "DONE";
                      var score =  new Object();
+                     var now_time = new Date();
+                     var airtime = now_time.getTime() - start_time.getTime();
 
                      score.rotations_raw = Math.floor((sumbeta / 360) * 100) / 100;
                      score.rotations = Math.floor((sumbeta / 360) * 100);
-                     score.airtime   = Math.floor(10*airtime);
+                     score.airtime  = Math.floor(airtime);
 
-                     score.total = score.rotations + score.airtime;
+                     score.total = score.rotations + Math.floor(0.5*airtime);
 
                      clearTimeout(timeout_handle);
-                     success_fn(score);
+                     success_fn(score, betas, gammas, accels);
              }
           }
   }
 
   };
-
-
 
 
   var ninjathrow = {
@@ -140,7 +145,6 @@
       success_fn = success;
       failure_fn = failure;
 
-      airtime = 0;
       oldmags = new Array();
     
       timeout_handle = window.setTimeout(function() {state = "DONE"; failure();}, 5000);
@@ -154,7 +158,11 @@
       sumbeta = 0;
       oldbeta = null;
       dbeta = 0;
-      
+
+      gammas = new Array();
+      betas = new Array();
+      accels = new Array();
+
       // START YOUR CALL BACKS HERE
       // window.addEventListener('devicemotion'...
       window.ondevicemotion = handleSomethingOrOther;
