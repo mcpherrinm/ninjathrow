@@ -118,7 +118,7 @@
                      var airtime = now_time.getTime() - start_time.getTime();
 
                      score.rotations_raw = Math.floor((sumbeta / 360) * 100) / 100;
-                     score.rotations = Math.floor((sumbeta / 360) * 100);
+                     score.rotations = Math.floor((sumbeta / 360) * 300);
                      score.airtime  = Math.floor(airtime);
 
                      score.total = score.rotations + Math.floor(0.5*airtime);
